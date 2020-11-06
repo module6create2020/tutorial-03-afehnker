@@ -1,43 +1,34 @@
 import pygame
 import sys
 from exercises.keyboard_handler import KeyboardHandler
-import random
+from exercises.python103 import Bubble
 
 
 class Game:
     """
-    Initialize PyGame and create a graphical surface to write. Similar
-    to void setup() in Processing
+    Initialize PyGame and create a graphical surface to write
     """
-
     def __init__(self):
         pygame.init()
+        self.red_team=list()
+        for i in range(10):
+            self.red_team.append(Bubble(400, 400, (255, 0, 0)))
 
-        # Below this line are the variables and objects fo the animation
-        self.x = 100
-        self.y = 100
-        self.dx = random.uniform(-2, 2)
-        self.dy = random.uniform(-2, 2)
-        self.diameter = 50
+        self.blue_team = list()
+        for i in range(10):
+            self.blue_team.append(Bubble(400, 400, (0, 0, 255)))
+
         self.size = [800, 800]
-
-        # Loads a random system font
+        self.screen = pygame.display.set_mode(self.size)
+        #Loads a random system font
         self.font = pygame.font.SysFont(pygame.font.get_fonts()[0], 24)
-        self.color = (50, 50, 50)
-
-        # Below this line are objects for timing, keyboard
-        # handling and screen. Don't change this.
         self.time = pygame.time.get_ticks()
         self.keyboard_handler = KeyboardHandler()
-        self.screen = pygame.display.set_mode(self.size)
+        self.color = (50,50,50)
 
-    """
-    Method 'game_loop' will be executed every frame to drive
-    the display and handling of events in the background. 
-    In Processing this is done behind the screen. Don't 
-    change this, unless you know what you are doing.
-    """
-
+    '''
+    Main game loop which will be executed every frame
+    '''
     def game_loop(self):
         current_time = pygame.time.get_ticks()
         delta_time = current_time - self.time
@@ -46,52 +37,44 @@ class Game:
         self.update_game(delta_time)
         self.draw_components()
 
-    """
-    Method 'update_game' is there to update the state of variables 
-    and objects from frame to frame.
-    """
 
+    '''
+    Put all logic here
+    '''
     def update_game(self, dt):
-        self.x += self.dx
-        self.y += self.dy
-        if self.x < 100 and self.dx < 0:
-            self.dx = - self.dx
-        if self.y < 100 and self.dy < 0:
-            self.dy = - self.dy
-        if self.x > self.size[0] - 100 - self.diameter and self.dx > 0:
-            self.dx = - self.dx
-        if self.y > self.size[1] - 100 - self.diameter and self.dy > 0:
-            self.dy = - self.dy
+        for b in self.red_team:
+            b.move(100,100,self.size[0]-150, self.size[1]-150)
+            for a in self.blue_team:
+                b.collide(a)
 
-    """
-    Method 'draw_components' is similar is meant to contain 
-    everything that draws one frame. It is similar to method
-    void draw() in Processing. Put all draw calls here. Leave all
-    updates in method 'update'
-    """
+        for b in self.blue_team:
+            b.move(100,100,self.size[0]-150, self.size[1]-150)
+            for a in self.red_team:
+                b.collide(a)
 
+
+
+
+    '''
+    Put all draw calls here
+    '''
     def draw_components(self):
-        # fill the screen and draw the rectangle in it
         self.screen.fill([255, 255, 255])
         pygame.draw.rect(self.screen, self.color, [[100, 100], [self.size[0] - 200, self.size[1] - 200]])
-        # draw ball
-        pygame.draw.ellipse(self.screen, (100, 255, 100), [[self.x, self.y], [self.diameter, self.diameter]])
-        text = self.font.render("!", True, (255, 255, 255))
-        self.screen.blit(text, (self.x + 22, self.y + 12))
-
-        # updates the entire surface (canvas). Keep it.
+        for b in self.red_team:
+            b.display(self.screen,self.font)
+        for b in self.blue_team:
+            b.display(self.screen,self.font)
+        # updates the entire surface (canvas)
         pygame.display.flip()
+
 
     def reset(self):
         pass
 
-    """
-    Method 'handle_event' loop over all the event types and 
-    handles them accordingly. 
-    In Processing this is done behind the screen. Don't 
-    change this, unless you know what you are doing.
-    """
-
+    '''
+    Loop over all the event types and handle them accordingly
+    '''
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -107,28 +90,19 @@ class Game:
             if event.type == pygame.MOUSEBUTTONUP:
                 self.handle_mouse_released(event)
 
-    """This method will store a currently pressed buttons 
-    in list 'keyboard_handler.pressed'."""
-
     def handle_key_down(self, event):
         self.keyboard_handler.key_pressed(event.key)
-
-    """This method will remove a released button 
-        from list 'keyboard_handler.pressed'."""
 
     def handle_key_up(self, event):
         self.keyboard_handler.key_released(event.key)
 
     def handle_mouse_motion(self, event):
-        """Similar to void mouseMoved() in Processing"""
         pass
 
     def handle_mouse_pressed(self, event):
-        """Similar to void mousePressed() in Processing"""
         pass
 
     def handle_mouse_released(self, event):
-        """Similar to void mouseReleased() in Processing"""
         pass
 
 
@@ -136,3 +110,4 @@ if __name__ == "__main__":
     g = Game()
     while True:
         g.game_loop()
+
