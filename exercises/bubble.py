@@ -13,6 +13,7 @@ class Bubble:
         self.dx = random.uniform(-1,1)
         self.dy = random.uniform(-1,1)
         self.color = color
+        self.diameter = 50
 
     def __del__(self):
         print(self.identify()+" has been deleted")
@@ -44,7 +45,7 @@ class Bubble:
         dist_now = math.sqrt(math.pow(self.x-other.x,2)+math.pow(self.y-other.y,2))
         dist_next = math.sqrt(math.pow(self.x+self.dx-other.x-other.dx,2)+math.pow(self.y+self.dy-other.y-other.dy,2))
 
-        if not(self is other) and dist_now < 50 and dist_next < dist_now:
+        if not(self is other) and dist_now < (self.diameter+other.diameter)/2 and dist_next < dist_now:
             numerator = (self.dx - other.dx) * (self.x - other.x) + (self.dy - other.dy) * (self.y - other.y)
             denominator = math.pow(self.x - other.x, 2) + math.pow(self.y - other.y, 2)
             temp1dx = self.dx - numerator / denominator * (self.x - other.x)
