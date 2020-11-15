@@ -1,5 +1,5 @@
 import pytest
-from exercises.python103 import Bubble
+from exercises.bubble import Bubble
 
 
 class TestExercise1_3_1:

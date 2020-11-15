@@ -1,7 +1,7 @@
 import pygame
 import sys
 from exercises.keyboard_handler import KeyboardHandler
-from exercises.python103 import Bubble
+from exercises.bubble import Bubble
 
 
 class Game:
