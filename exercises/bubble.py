@@ -44,8 +44,9 @@ class Bubble:
     def collide(self, other):
         dist_now = math.sqrt(math.pow(self.x-other.x,2)+math.pow(self.y-other.y,2))
         dist_next = math.sqrt(math.pow(self.x+self.dx-other.x-other.dx,2)+math.pow(self.y+self.dy-other.y-other.dy,2))
+        minDist = (self.diameter + other.diameter) / 2
 
-        if not(self is other) and dist_now < (self.diameter+other.diameter)/2 and dist_next < dist_now:
+        if not(self is other) and dist_now < minDist and dist_next < dist_now:
             numerator = (self.dx - other.dx) * (self.x - other.x) + (self.dy - other.dy) * (self.y - other.y)
             denominator = math.pow(self.x - other.x, 2) + math.pow(self.y - other.y, 2)
             temp1dx = self.dx - numerator / denominator * (self.x - other.x)
